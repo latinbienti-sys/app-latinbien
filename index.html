@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Latinbien - App de Compras</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#1a365d">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div id="app">
+        <header class="app-header">
+            <div class="header-content">
+                <div class="logo">
+                    <img src="https://www.latinbien.com/web/image/website/1/logo/LATINBIEN?unique=8c08e93" alt="Latinbien">
+                </div>
+                <button class="cart-btn" onclick="toggleCart()">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span id="cart-count" class="cart-count">0</span>
+                </button>
+            </div>
+        </header>
+
+        <main class="main-content" id="main-content">
+            <section class="hero">
+                <h1>¡Porque puedes y te lo mereces!</h1>
+                <p>Compra al contado o a crédito</p>
+                <button class="btn-primary" onclick="scrollToCategories()">Explorar Catálogo</button>
+            </section>
+
+            <section class="credit-lines" id="credit-lines">
+                <h2>Líneas de Crédito</h2>
+                <div class="credit-cards">
+                    <div class="credit-card" data-plan="clasico">
+                        <div class="plan-badge clasico">Credi Clásico</div>
+                        <div class="credit-info">
+                            <p><strong>Inicial desde:</strong> 50%</p>
+                            <p><strong>Plazo:</strong> 6 a 20 cuotas</p>
+                        </div>
+                    </div>
+                    <div class="credit-card" data-plan="mas">
+                        <div class="plan-badge mas">Credi Más</div>
+                        <div class="credit-info">
+                            <p><strong>Inicial desde:</strong> 40%</p>
+                            <p><strong>Plazo:</strong> 6 a 20 cuotas</p>
+                        </div>
+                    </div>
+                    <div class="credit-card" data-plan="pro">
+                        <div class="plan-badge pro">Credi Pro</div>
+                        <div class="credit-info">
+                            <p><strong>Inicial desde:</strong> 30%</p>
+                            <p><strong>Plazo:</strong> 6 a 20 cuotas</p>
+                        </div>
+                    </div>
+                    <div class="credit-card premium" data-plan="premium">
+                        <div class="plan-badge premium">Credi Club Premium</div>
+                        <div class="credit-info">
+                            <p><strong>Inicial desde:</strong> 20%</p>
+                            <p><strong>Plazo:</strong> 6 a 20 cuotas</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="categories" id="categories">
+                <h2>Categorías</h2>
+                <div class="category-grid">
+                    <button class="category-btn" data-category="telefonos">
+                        <i class="fas fa-mobile-alt"></i>
+                        <span>Teléfonos</span>
+                    </button>
+                    <button class="category-btn" data-category="televisores">
+                        <i class="fas fa-tv"></i>
+                        <span>Televisores</span>
+                    </button>
+                    <button class="category-btn" data-category="computacion">
+                        <i class="fas fa-laptop"></i>
+                        <span>Computación</span>
+                    </button>
+                    <button class="category-btn" data-category="consolas">
+                        <i class="fas fa-gamepad"></i>
+                        <span>Consolas</span>
+                    </button>
+                    <button class="category-btn" data-category="hogar">
+                        <i class="fas fa-home"></i>
+                        <span>Hogar</span>
+                    </button>
+                    <button class="category-btn" data-category="oficina">
+                        <i class="fas fa-briefcase"></i>
+                        <span>Oficina</span>
+                    </button>
+                    <button class="category-btn" data-category="automotriz">
+                        <i class="fas fa-car"></i>
+                        <span>Automotriz</span>
+                    </button>
+                    <button class="category-btn" data-category="industrial">
+                        <i class="fas fa-industry"></i>
+                        <span>Industrial</span>
+                    </button>
+                </div>
+            </section>
+
+            <section class="products-section" id="products-section" style="display: none;">
+                <div class="section-header">
+                    <button class="back-btn" onclick="showCategories()">
+                        <i class="fas fa-arrow-left"></i> Volver
+                    </button>
+                    <h2 id="category-title">Productos</h2>
+                </div>
+                <div class="products-grid" id="products-grid"></div>
+            </section>
+
+            <section class="simulator" id="simulator">
+                <h2>Simulador de Crédito</h2>
+                <div class="simulator-form">
+                    <div class="form-group">
+                        <label>Precio del producto ($)</label>
+                        <input type="number" id="sim-price" placeholder="Ej: 500" min="1">
+                    </div>
+                    <div class="form-group">
+                        <label>Plan de crédito</label>
+                        <select id="sim-plan">
+                            <option value="50">Credi Clásico (50% inicial)</option>
+                            <option value="40">Credi Más (40% inicial)</option>
+                            <option value="30">Credi Pro (30% inicial)</option>
+                            <option value="20" selected>Credi Club Premium (20% inicial)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Número de cuotas</label>
+                        <select id="sim-quotas">
+                            <option value="6">6 cuotas</option>
+                            <option value="12" selected>12 cuotas</option>
+                            <option value="18">18 cuotas</option>
+                            <option value="20">20 cuotas</option>
+                        </select>
+                    </div>
+                    <button class="btn-primary" onclick="calculateCredit()">Calcular</button>
+                </div>
+                <div class="simulator-result" id="sim-result" style="display: none;">
+                    <h3>Resultado de tu simulación</h3>
+                    <div class="result-details">
+                        <p><strong>Precio:</strong> <span id="res-price"></span></p>
+                        <p><strong>Inicial:</strong> <span id="res-initial"></span></p>
+                        <p><strong>Monto a financiar:</strong> <span id="res-financed"></span></p>
+                        <p><strong>Cuota mensual:</strong> <span id="res-quota"></span></p>
+                        <p><strong>Total a pagar:</strong> <span id="res-total"></span></p>
+                    </div>
+                    <a href="https://api.whatsapp.com/send?phone=584147348785&text=Hola!%20Me%20interesa%20solicitar%20una%20línea%20de%20crédito" class="btn-whatsapp" target="_blank">
+                        <i class="fab fa-whatsapp"></i> Solicitar por WhatsApp
+                    </a>
+                </div>
+            </section>
+
+            <section class="contact">
+                <h2>Contáctanos</h2>
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <i class="fas fa-phone"></i>
+                        <a href="tel:+584147348785">+58 (414) 7348785</a>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <a href="mailto:info@latinbien.com">info@latinbien.com</a>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Avenida Las Américas, CC Rodeo Plaza, Mérida</span>
+                    </div>
+                </div>
+                <a href="https://api.whatsapp.com/send?phone=584147348785&text=Hola!%20me%20gustaría%20más%20información" class="btn-whatsapp" target="_blank">
+                    <i class="fab fa-whatsapp"></i> Chatea con nosotros
+                </a>
+            </section>
+        </main>
+
+        <aside class="cart-sidebar" id="cart-sidebar">
+            <div class="cart-header">
+                <h3>Carrito de Compras</h3>
+                <button class="close-cart" onclick="toggleCart()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="cart-items" id="cart-items">
+                <p class="empty-cart">Tu carrito está vacío</p>
+            </div>
+            <div class="cart-footer" id="cart-footer" style="display: none;">
+                <div class="cart-total">
+                    <span>Total:</span>
+                    <span id="cart-total">$0.00</span>
+                </div>
+                <button class="btn-primary btn-full" onclick="checkout()">
+                    <i class="fab fa-whatsapp"></i> Comprar por WhatsApp
+                </button>
+            </div>
+        </aside>
+
+        <div class="cart-overlay" id="cart-overlay" onclick="toggleCart()"></div>
+
+        <nav class="bottom-nav">
+            <button class="nav-item active" onclick="navigateTo('home')">
+                <i class="fas fa-home"></i>
+                <span>Inicio</span>
+            </button>
+            <button class="nav-item" onclick="navigateTo('categories')">
+                <i class="fas fa-th"></i>
+                <span>Categorías</span>
+            </button>
+            <button class="nav-item" onclick="navigateTo('simulator')">
+                <i class="fas fa-calculator"></i>
+                <span>Simulador</span>
+            </button>
+            <button class="nav-item" onclick="navigateTo('contact')">
+                <i class="fas fa-phone"></i>
+                <span>Contacto</span>
+            </button>
+        </nav>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

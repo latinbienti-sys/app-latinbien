@@ -1,0 +1,14 @@
+{
+    "lastUpdate": "2026-04-03",
+    "products": {
+        "telefonos": [
+            {
+                "id": 1,
+                "name": "Samsung Galaxy S24",
+                "price": 899,
+                "image": "https://www.latinbien.com/web/image/product.product/1/image_1920",
+                "sku": "SAMS24"
+            }
+        ]
+    }
+}

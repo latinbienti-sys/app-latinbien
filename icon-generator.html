@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Iconos - Latinbien</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 { color: #1a365d; }
+        .upload-area {
+            border: 3px dashed #ccc;
+            padding: 40px;
+            text-align: center;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .upload-area:hover {
+            border-color: #ed8936;
+            background: #fff8f0;
+        }
+        input[type="file"] { display: none; }
+        .preview {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .icon-box {
+            text-align: center;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        .icon-box canvas {
+            border: 1px solid #ddd;
+            background: white;
+        }
+        .icon-box p {
+            margin: 8px 0 0;
+            font-size: 12px;
+            color: #666;
+        }
+        .btn {
+            background: #1a365d;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-top: 15px;
+        }
+        .btn:hover { background: #2c5282; }
+        .checklist {
+            background: #e8f4f8;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        .checklist li {
+            margin: 8px 0;
+        }
+        code {
+            background: #2d3748;
+            color: #68d391;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎨 Generador de Iconos - Latinbien</h1>
+    
+    <div class="card">
+        <h2>1. Subir Logo Original</h2>
+        <p>Usa una imagen cuadrada PNG/SVG (mínimo 1024x1024)</p>
+        
+        <div class="upload-area" onclick="document.getElementById('logoInput').click()">
+            <p>📁 Clic para seleccionar imagen</p>
+            <small>o arrastra una imagen aquí</small>
+        </div>
+        <input type="file" id="logoInput" accept="image/*" onchange="handleImage(this)">
+        
+        <div class="preview" id="preview"></div>
+    </div>
+
+    <div class="card">
+        <h2>2. Recursos Necesarios para Play Store</h2>
+        <ul class="checklist">
+            <li>✅ <strong>Icono</strong> - 512x512 px (obligatorio)</li>
+            <li>✅ <strong>Screenshot Teléfono</strong> - 1080x1920 px (mínimo 2)</li>
+            <li>✅ <strong>Screenshot Tablet</strong> - 1920x1080 px (opcional)</li>
+            <li>✅ <strong>Banner</strong> - 1024x500 px</li>
+            <li>✅ <strong>Política de Privacidad</strong> - URL pública</li>
+        </ul>
+    </div>
+
+    <div class="card">
+        <h2>3. Siguientes Pasos</h2>
+        <ol>
+            <li>Descarga los iconos generados arriba</li>
+            <li>Crea cuenta en <a href="https://play.google.com/console" target="_blank">Google Play Console</a> ($25)</li>
+            <li>Prepara capturas de pantalla de tu app</li>
+            <li>Crea archivo de política de privacidad</li>
+            <li>Sube todo a Play Console</li>
+        </ol>
+    </div>
+
+    <script>
+        const sizes = [
+            { name: 'playstore-icon', size: 512 },
+            { name: 'app-icon-xxxhdpi', size: 192 },
+            { name: 'app-icon-xxhdpi', size: 144 },
+            { name: 'app-icon-xhdpi', size: 96 },
+            { name: 'app-icon-hdpi', size: 72 },
+            { name: 'app-icon-mdpi', size: 48 },
+            { name: 'feature-graphic', w: 1024, h: 500 }
+        ];
+
+        function handleImage(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    generateIcons(e.target.result);
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function generateIcons(src) {
+            const preview = document.getElementById('preview');
+            preview.innerHTML = '';
+
+            sizes.forEach(s => {
+                const canvas = document.createElement('canvas');
+                const size = s.size || s.w;
+                canvas.width = s.w || s.size;
+                canvas.height = s.h || s.size;
+                const ctx = canvas.getContext('2d');
+                
+                const img = new Image();
+                img.onload = function() {
+                    ctx.fillStyle = '#1a365d';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    
+                    const scale = Math.max(canvas.width / img.width, canvas.height / img.height);
+                    const x = (canvas.width - img.width * scale) / 2;
+                    const y = (canvas.height - img.height * scale) / 2;
+                    ctx.drawImage(img, x, y, img.width * scale, img.height * scale);
+                };
+                img.src = src;
+
+                const box = document.createElement('div');
+                box.className = 'icon-box';
+                box.innerHTML = `<canvas id="canvas-${s.name}"></canvas><p>${s.name}.png</p><button class="btn" onclick="downloadCanvas('${s.name}')">Descargar</button>`;
+                preview.appendChild(box);
+                
+                setTimeout(() => {
+                    const c = document.getElementById(`canvas-${s.name}`);
+                    const cx = c.getContext('2d');
+                    c.width = canvas.width;
+                    c.height = canvas.height;
+                    cx.fillStyle = '#1a365d';
+                    cx.fillRect(0, 0, c.width, c.height);
+                    const img2 = new Image();
+                    img2.onload = function() {
+                        const scale = Math.max(c.width / img2.width, c.height / img2.height);
+                        const x = (c.width - img2.width * scale) / 2;
+                        const y = (c.height - img2.height * scale) / 2;
+                        cx.drawImage(img2, x, y, img2.width * scale, img2.height * scale);
+                    };
+                    img2.src = src;
+                }, 100);
+            });
+        }
+
+        function downloadCanvas(name) {
+            const canvas = document.getElementById(`canvas-${name}`);
+            const link = document.createElement('a');
+            link.download = `${name}.png`;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+    </script>
+</body>
+</html>
